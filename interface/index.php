@@ -1,3 +1,14 @@
+<?php
+session_start();
+if(!isset($_SESSION['login'])) {
+    header("Location: /");
+}
+$db = mysqli_connect("localhost", "admin", "open2319", "consttest");
+mysqli_set_charset($db, "utf8");
+$responce = mysqli_query($db, "SELECT * FROM `observers` WHERE destrict_ID = ".$_SESSION['destrict_ID']);
+//Преобразуем ответ в двумерный массив
+$responce = mysqli_fetch_all($responce);
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,6 +31,17 @@
                 <br>
                 <h1>Последние добавленные наблюдатели:</h1>
                 <br>
+                <?php
+                $i = 0;
+                foreach($responce as $value) {
+                    if($i > 5) {
+                        break;
+                    }
+                    echo("<h3><b>".$value[0]."</b> ".$value[1]."</h3><a class='btn btn-primary' href='alldata.php?id=".$value[6]."'>Подробнее</a><br><br>");
+                    $i++;
+                }
+                ?>
+
             </div>
         </div>
     </div>
@@ -38,15 +60,15 @@
                     <br>
                     <input name="phone" placeholder="Телефон" type="text" class="form-control">
                     <br>
-                    <input name="phone" placeholder="Адрес постоянной регистрации" type="text" class="form-control">
+                    <input name="registration_address" placeholder="Адрес постоянной регистрации" type="text" class="form-control">
                     <br>
                     <h3>Паспорт</h3>
                     <br>
-                    <input name="passportsn" placeholder="Серия / Номер" type="text" class="form-control">
+                    <input name="sn" placeholder="Серия / Номер" type="text" class="form-control">
                     <br>
-                    <input name="issuedby" placeholder="Выдан" type="text" class="form-control">
+                    <input name="issued" placeholder="Выдан" type="text" class="form-control">
                     <br>
-                    <input name="issuedata" placeholder="Дата выдачи" type="text" class="form-control">
+                    <input name="issued_date" placeholder="Дата выдачи" type="text" class="form-control">
                     <br>
                     <input name="SNILS" placeholder="СНИЛС" type="text" class="form-control">
                     <br>
@@ -65,7 +87,7 @@
                     <br>
                     <input name="personalAcc" placeholder="Лицевой счёт получателя" type="text" class="form-control">
                     <br>
-                    <input name="card" placeholder="Карта МИР (Маэстро), сберкнижка и т.д." type="text" class="form-control">
+                    <input name="card" placeholder="Карта МИР (Маэстро), сберкнижка и т.д. (указать дополнительно)" type="text" class="form-control">
                     <br>
                     <input value="Добавить наблюдателя" type="submit" class="form-control btn btn-outline-primary">
                     <br>

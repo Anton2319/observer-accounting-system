@@ -13,6 +13,7 @@ if($responce['password']==$password) {
     session_start();
     $_SESSION['login'] = $login;
     $_SESSION['password'] = $password;
+    $_SESSION['destrict_ID'] = $responce['destrict_ID'];
     header("Location: index.php");
 }
 else {
