@@ -1,0 +1,17 @@
+@media(max-width: 900px) {
+    .loginblock {
+        margin-top: 10em;
+        margin-bottom: 10em;
+        padding: 2em;
+        border-radius: 4px;
+        background-color: white;
+    }
+}
+@media(min-width: 900px) {
+    .loginblock {
+        margin: 10em;
+        padding: 2em;
+        border-radius: 4px;
+        background-color: white;
+    }
+}
