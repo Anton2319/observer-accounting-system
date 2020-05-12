@@ -10,16 +10,38 @@ if($observer_ID != $_GET['id']) {
 }
 $db = mysqli_connect("localhost", "admin", "open2319", "consttest");
 mysqli_set_charset($db, "utf8");
-$responce = mysqli_query($db, "SELECT * FROM `observers` WHERE observer_ID = ".$observer_ID);
-$responce = mysqli_fetch_assoc($responce);
-if($responce['destrict_ID'] != $_SESSION['destrict_ID']) {
-    echo("<img src='accessdenited.jpg'>");
-    exit(0);
+if($_SESSION['privileges_level']>=2) {
+    $responce = mysqli_query($db, "SELECT * FROM `observers` WHERE observer_ID = ".$observer_ID);
+    if($responce['destrict_ID'] != $_SESSION['destrict_ID']) {
+        echo("<img src='accessdenited.jpg'>");
+        exit(0);
+    }
 }
-$responce_passportdata = mysqli_query($db, "SELECT * FROM `observers_passportdata` WHERE observer_ID = ".$observer_ID);
+else {
+    $responce = mysqli_query($db, "SELECT * FROM `observers` WHERE observer_ID = ".$observer_ID);
+}
+$responce = mysqli_fetch_assoc($responce);
+if($_SESSION['privileges_level']>=2) {
+    $responce_passportdata = mysqli_query($db, "SELECT * FROM `observers_passportdata` WHERE observer_ID = ".$observer_ID);
+    if($responce_passportdata['destrict_ID'] != $_SESSION['destrict_ID']) {
+        echo("<img src='accessdenited.jpg'>");
+        exit(0);
+    }
+}
+else {
+    $responce_passportdata = mysqli_query($db, "SELECT * FROM `observers_passportdata` WHERE observer_ID = ".$observer_ID);
+}
 $responce_passportdata = mysqli_fetch_assoc($responce_passportdata);
-
-$responce_bankdata = mysqli_query($db, "SELECT * FROM `observers_bankdata` WHERE observer_ID = ".$observer_ID);
+if($_SESSION['privileges_level']>=2) {
+    $responce_bankdata = mysqli_query($db, "SELECT * FROM `observers_bankdata` WHERE observer_ID = ".$observer_ID);
+    if($responce_bankdata['destrict_ID'] != $_SESSION['destrict_ID']) {
+        echo("<img src='accessdenited.jpg'>");
+        exit(0);
+    }
+}
+else {
+    $responce_bankdata = mysqli_query($db, "SELECT * FROM `observers_bankdata` WHERE observer_ID = ".$observer_ID);
+}
 $responce_bankdata = mysqli_fetch_assoc($responce_bankdata);
 ?>
 <!DOCTYPE html>

@@ -5,7 +5,12 @@ if(!isset($_SESSION['login'])) {
 }
 $db = mysqli_connect("localhost", "admin", "open2319", "consttest");
 mysqli_set_charset($db, "utf8");
-$responce = mysqli_query($db, "SELECT * FROM `observers` WHERE destrict_ID = ".$_SESSION['destrict_ID']);
+if($_SESSION['privileges_level']>=2) {
+    $responce = mysqli_query($db, "SELECT * FROM `observers` WHERE destrict_ID = ".$_SESSION['destrict_ID']);
+}
+else {
+    $responce = mysqli_query($db, "SELECT * FROM `observers` WHERE 1");
+}
 //Преобразуем ответ в двумерный массив
 $responce = mysqli_fetch_all($responce);
 ?>

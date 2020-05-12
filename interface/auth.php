@@ -14,6 +14,7 @@ if($responce['password']==$password) {
     $_SESSION['login'] = $login;
     $_SESSION['password'] = $password;
     $_SESSION['destrict_ID'] = $responce['destrict_ID'];
+    $_SESSION['privileges_level'] = $responce['privileges_level'];
     header("Location: index.php");
 }
 else {
