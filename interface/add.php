@@ -1,9 +1,4 @@
 <?php
-
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-
 session_start();
 if(!isset($_SESSION['login'])) {
     header("Location: /");
@@ -29,7 +24,7 @@ $personalAcc = htmlspecialchars($_POST['personalAcc']);
 $card = htmlspecialchars($_POST['card']);
 
 $db = mysqli_connect("localhost", "admin", "open2319", "consttest");
-mysqli_set_charset($db, "utf8_bin");
+mysqli_set_charset($db, "utf8");
 
 function countTable($tablename, $db) {
     //Переменную db не видно внутри функции
@@ -37,7 +32,8 @@ function countTable($tablename, $db) {
     $responce = mysqli_fetch_array($responce)[0];
     return $responce;
 }
-mysqli_query($db, "set autocommit=0; Start transaction;");
+mysqli_query($db, "SET autocommit=0");
+mysqli_query($db, "START TRANSACTION");
 $requestText1 = "INSERT INTO `observers`(`FIO`, `borndate`, `email`, `phone`, `registration_address`, `destrict_ID`, `observer_ID`) VALUES ('".$fio."','".$borndate."','".$email."','".$phone."','".$registration_address."',".$_SESSION['destrict_ID'].", ".countTable('observers', $db).")";
 
 $requestText2 = "INSERT INTO `observers_passportdata`(`sn`, `issued`, `issued_date`, `SNILS`, `INN`, `destrict_ID`, `observer_ID`) VALUES ('".$sn."','".$issued."','".$issued_date."', '".$SNILS."','".$INN."',".$_SESSION['destrict_ID'].", ".countTable('observers_passportdata', $db).")";
@@ -47,26 +43,27 @@ $requestText3 = "INSERT INTO `observers_bankdata` (`bankname`, `INN`, `BIK`, `KO
 $responce = mysqli_query($db, $requestText1);
 //Если произошла ошибка транзакции
 if(!$responce) {
-    mysqli_query($db, "rollback;");
+    mysqli_query($db, "ROLLBACK");
     echo("<br><h1>Ошибка добавления наблюдателя в базу данных, проверьте правильность заполнения всех полей!</h1>");
     exit(1);
 }
 $responce = mysqli_query($db, $requestText2);
 //Если произошла ошибка транзакции
 if(!$responce) {
-    mysqli_query($db, "rollback;");
+    mysqli_query($db, "ROLLBACK");
     echo("<br><h1>Ошибка добавления наблюдателя в базу данных, проверьте правильность заполнения всех полей!</h1>");
     exit(1);
 }
 $responce = mysqli_query($db, $requestText3);
 //Если произошла ошибка транзакции
 if(!$responce) {
-    mysqli_query($db, "rollback;");
+    mysqli_query($db, "ROLLBACK");
     echo("<br><h1>Ошибка добавления наблюдателя в базу данных, проверьте правильность заполнения всех полей!</h1>");
     exit(1);
 }
+//если всё успешно
 else {
-    mysqli_query($db, "commit;");
+    mysqli_query($db, "COMMIT");
     header("Location: index.php");
 }
 ?>
